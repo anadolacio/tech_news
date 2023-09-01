@@ -1,7 +1,25 @@
+import requests
+import time
+
+url = " https://blog.betrybe.com"
+
+
 # Requisito 1
 def fetch(url):
     """Seu código deve vir aqui"""
-    raise NotImplementedError
+    try:
+        response = requests.get(url, timeout=3)
+        print(response.status_code)
+        time.sleep(1)
+        if response.status_code == 200:
+            result = response.text
+            return result
+        else:
+            return None
+    except requests.exceptions.ReadTimeout:
+        return None
+
+    # raise NotImplementedError
 
 
 # Requisito 2

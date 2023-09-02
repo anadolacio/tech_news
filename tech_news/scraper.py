@@ -33,7 +33,6 @@ def scrape_updates(html_content):
         return result
     except Exception:
         return []
-    
 
 
 # Requisito 3

@@ -2,6 +2,10 @@ from parsel import Selector
 import requests
 import time
 
+# from bs4 import BeautifulSoup
+
+# from tech_news.database import create_news
+
 url = "https://blog.betrybe.com"
 
 
@@ -50,14 +54,41 @@ def scrape_next_page_link(html_content):
 # Requisito 4
 def scrape_news(html_content):
     """Seu código deve vir aqui"""
-    raise NotImplementedError
+    # raise NotImplementedError
+    result_dic = Selector(html_content)
+    url = result_dic.css("link[rel=canonical]::attr(href)").get()
+    title = result_dic.css(".entry-title::text").get().strip()  # type: ignore
+    timestamp = result_dic.css(".meta-date::text").re_first(
+        r"\d{2}/\d{2}/\d{4}"
+    )
+    writer = result_dic.css(".author a::text").get()
+    reading_time = result_dic.css(".meta-reading-time::text").re_first(r"\d+")
+    summary = result_dic.css(
+        ".entry-content > p:first-of-type *::text"
+    ).getall()
+    category = result_dic.css(".category-style .label::text").get()
+
+    result = {
+        "url": url,
+        "title": title,
+        "timestamp": timestamp,
+        "writer": writer,
+        "reading_time": int(reading_time),  # type: ignore
+        "summary": "".join(summary).strip(),
+        "category": category,
+    }
+    return result
 
 
 # Requisito 5
 def get_tech_news(amount):
     """Seu código deve vir aqui"""
-    raise NotImplementedError
+    # raise NotImplementedError
+    # all_news = []
 
+    # while scrape_next_page_link(fetch(url)) is not None:
 
-html = fetch("https://blog.betrybe.com")
-scrape_updates(html)
+    #     all_news.extend(scrape_news(fetch(url)))
+    #     url = scrape_next_page_link(fetch(url))
+
+    # return all_news

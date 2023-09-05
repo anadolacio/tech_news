@@ -1,10 +1,7 @@
 from parsel import Selector
 import requests
 import time
-
-# from bs4 import BeautifulSoup
-
-# from tech_news.database import create_news
+from tech_news.database import create_news
 
 url = "https://blog.betrybe.com"
 
@@ -82,13 +79,24 @@ def scrape_news(html_content):
 
 # Requisito 5
 def get_tech_news(amount):
+    url = "https://blog.betrybe.com"
     """Seu código deve vir aqui"""
     # raise NotImplementedError
-    # all_news = []
+    all_news = []
 
-    # while scrape_next_page_link(fetch(url)) is not None:
+    while len(all_news) < amount:
+        html_content = fetch(url)
+        all_news.extend(scrape_updates(html_content))
+        url = scrape_next_page_link(html_content)
 
-    #     all_news.extend(scrape_news(fetch(url)))
-    #     url = scrape_next_page_link(fetch(url))
+    news = all_news[:amount]
+    news_itens = []
+    for new in news:
+        fetch_ = fetch(new)
+        scrape_ = scrape_news(fetch_)
+        news_itens.append(scrape_)
+    all_news = news_itens
 
-    # return all_news
+    create_news(all_news)
+
+    return all_news
